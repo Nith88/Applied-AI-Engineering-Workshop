@@ -6,11 +6,25 @@ The mentor guide's teaching loop is: frame a problem, predict what should happen
 
 ## Workshop learning path
 
-| Session | Topics |
+| Deck | Focus |
 | --- | --- |
-| 1. Embeddings and RAG | Text embeddings, vector databases, semantic search, RAG, and a knowledge-base chatbot assignment |
-| 2. Pipelines and tools | LangChain Expression Language (LCEL), conversation memory, custom tools, and an assistant-tool assignment |
-| 3. Agents and workflows | Tool-calling agents, stateful LangGraph workflows, and a domain-specific agent assignment |
+| 1.1 — Text embeddings and vector databases | Encode text as vectors, compare embeddings, store documents in ChromaDB, and run semantic search. |
+| 1.2 — Retrieval-augmented generation (RAG) | Load and chunk a PDF, retrieve evidence, and ground a Gemini answer in the retrieved passages. |
+| 1.3 — Knowledge base and RAG bot assignment | Adapt the RAG chatbot to a subject document and evaluate answers for relevance, faithfulness, completeness, and hallucination. |
+| 2.1 — LangChain pipelines and LCEL | Compose prompts, models, and parsers into simple, sequential, multi-input, and batched chains. |
+| 2.2 — Conversation memory and tool integration | Preserve session-specific message history and define validated Python tools. |
+| 2.3 — Build an assistant tool assignment | Design and test a small teaching-related tool with clear inputs, validation, and predictable outputs. |
+| 3.1 — Tool-calling agents | Give a model tools, execute its tool requests, and inspect the decision loop. |
+| 3.2 — Agent workflows with LangGraph | Use state, nodes, and conditional routes to classify and safely handle different requests. |
+| 3.3 — Tool-calling agent assignment | Build a domain-specific agent with at least three tools, including one custom tool, and demonstrate single- and multi-tool requests. |
+
+The learning progression is: embeddings → vector search → RAG → composed chains → memory and tools → agents → stateful workflows.
+
+### Assignment outcomes
+
+- **Knowledge base and RAG bot:** Build a chatbot for a suitable subject document, test at least five questions, inspect the retrieved evidence, and report pass/fail results. The mentor guide also suggests comparing chunk sizes and retrieval counts.
+- **Assistant tool:** Choose a repetitive teaching task, implement it as a clear Python function/tool, validate its inputs, and test multiple cases.
+- **Tool-calling agent:** Demonstrate at least three tools, including a custom tool, with three question types and a multi-step tool example. Explain a teaching use case and include safety limits.
 
 ## Repository contents
 
@@ -20,22 +34,24 @@ The mentor guide's teaching loop is: frame a problem, predict what should happen
 │   └── AI_Ethics_Policy.pdf
 ├── labs/
 │   ├── demo_1_vector_db.py
-│   └── demo_2_rag_chatbot.py
+│   ├── demo_2_rag_chatbot.py
+│   └── demo_3_langchain_pipeline.py
 ├── requirements.txt
 └── readme.md
 ```
 
-The workspace currently includes the first two runnable labs:
+The workspace currently includes these runnable labs:
 
 - **`labs/demo_1_vector_db.py`** — creates embeddings with `all-MiniLM-L6-v2`, compares sentence similarity, stores sample documents in ChromaDB, and retrieves documents for a semantic query.
 - **`labs/demo_2_rag_chatbot.py`** — extracts text from the sample PDF, chunks and embeds it, retrieves relevant passages, and asks Gemini to answer using that evidence.
+- **`labs/demo_3_langchain_pipeline.py`** — demonstrates a simple LCEL chain, a sequential research-and-summary pipeline, a multi-input lesson-plan chain, and batch glossary generation.
 
-The mentor guide also covers LCEL, memory, tools, LangGraph, and email-agent examples. Those later demos are not currently included as scripts in `labs/`.
+The mentor guide also covers conversation memory, tools, LangGraph, and email-agent examples. Those later demos are not currently included as scripts in `labs/`.
 
 ## Requirements
 
 - Python 3.12 is the interpreter used for this workspace.
-- A Google Gemini API key is required for the RAG chatbot. The vector database demo uses a local embedding model; its first run downloads that model.
+- A Google Gemini API key is required for the RAG chatbot and LCEL pipeline demos. The vector database demo uses a local embedding model; its first run downloads that model.
 - Internet access is needed to install packages, download the embedding model, and call Gemini.
 
 ## Setup
@@ -86,6 +102,7 @@ Run from the repository root so the relative PDF and database paths resolve corr
 ```powershell
 python labs\demo_1_vector_db.py
 python labs\demo_2_rag_chatbot.py
+python labs\demo_3_langchain_pipeline.py
 ```
 
 The first lab stores its local ChromaDB collection in `chroma_db/`. The second uses `data/AI_Ethics_Policy.pdf` and stores its collection in `rag_chroma/`. These are generated local data directories, not source files.
