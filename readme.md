@@ -35,7 +35,8 @@ The learning progression is: embeddings → vector search → RAG → composed c
 ├── labs/
 │   ├── demo_1_vector_db.py
 │   ├── demo_2_rag_chatbot.py
-│   └── demo_3_langchain_pipeline.py
+│   ├── demo_3_langchain_pipeline.py
+│   └── demo4.py
 ├── requirements.txt
 └── readme.md
 ```
@@ -45,13 +46,14 @@ The workspace currently includes these runnable labs:
 - **`labs/demo_1_vector_db.py`** — creates embeddings with `all-MiniLM-L6-v2`, compares sentence similarity, stores sample documents in ChromaDB, and retrieves documents for a semantic query.
 - **`labs/demo_2_rag_chatbot.py`** — extracts text from the sample PDF, chunks and embeds it, retrieves relevant passages, and asks Gemini to answer using that evidence.
 - **`labs/demo_3_langchain_pipeline.py`** — demonstrates a simple LCEL chain, a sequential research-and-summary pipeline, a multi-input lesson-plan chain, and batch glossary generation.
+- **`labs/demo4.py`** — uses `RunnableWithMessageHistory` and an in-memory `ChatMessageHistory` dictionary to keep two Gemini conversations separate by `session_id`. `MessagesPlaceholder` inserts prior turns into the prompt; `input_messages_key` identifies the current user input, and `history_messages_key` identifies the prompt variable for prior turns. It defines three `@tool`s and demonstrates the chatbot selecting and calling them, alongside direct `.invoke()` tests.
 
-The mentor guide also covers conversation memory, tools, LangGraph, and email-agent examples. Those later demos are not currently included as scripts in `labs/`.
+The mentor guide also covers LangGraph and email-agent examples, which are not currently included as scripts in `labs/`.
 
 ## Requirements
 
 - Python 3.12 is the interpreter used for this workspace.
-- A Google Gemini API key is required for the RAG chatbot and LCEL pipeline demos. The vector database demo uses a local embedding model; its first run downloads that model.
+- A Google Gemini API key is required for the RAG chatbot, LCEL pipeline, and conversation-history demo. The vector database demo uses a local embedding model; its first run downloads that model.
 - Internet access is needed to install packages, download the embedding model, and call Gemini.
 
 ## Setup
@@ -103,6 +105,7 @@ Run from the repository root so the relative PDF and database paths resolve corr
 python labs\demo_1_vector_db.py
 python labs\demo_2_rag_chatbot.py
 python labs\demo_3_langchain_pipeline.py
+python labs\demo4.py
 ```
 
 The first lab stores its local ChromaDB collection in `chroma_db/`. The second uses `data/AI_Ethics_Policy.pdf` and stores its collection in `rag_chroma/`. These are generated local data directories, not source files.
