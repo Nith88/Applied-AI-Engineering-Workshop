@@ -8,7 +8,7 @@ from langchain_community.chat_message_histories import ChatMessageHistory
 
 load_dotenv()
 llm = ChatGoogleGenerativeAI(
-    model="gemini-3.8-flash",
+    model="gemini-3.5-flash-lite",
     google_api_key=os.getenv("GOOGLE_API_KEY"),
     temperature=0
 )

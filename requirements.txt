@@ -9,3 +9,4 @@ langchain-google-genai
 langgraph
 duckduckgo-search
 google-generativeai
+streamlit

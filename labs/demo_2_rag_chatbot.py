@@ -41,7 +41,7 @@ collection.upsert(
 
 # 4. Retrieve, 5. augment, 6. generate.
 llm = ChatGoogleGenerativeAI(
-    model="gemini-3.8-flash", google_api_key=api_key, temperature=0
+    model="gemini-3.5-flash-lite", google_api_key=api_key, temperature=0
 )
 
 def answer_question(question, k=3):

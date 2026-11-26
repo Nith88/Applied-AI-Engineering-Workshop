@@ -1,6 +1,11 @@
 """Small tests for deterministic workflow logic; no Gemini or Gmail needed."""
 
-from workflow_core import decide_action, validate_classification
+from workflow_core import (
+    build_workflow,
+    decide_action,
+    make_initial_state,
+    validate_classification,
+)
 
 def test_decision_rules():
     assert decide_action({"urgency": "High", "needs_reply": True})["action"] == "flag_for_review"
@@ -16,7 +21,20 @@ def test_validation():
     assert valid["urgency"] == "Medium"
     assert valid["needs_reply"] is True
 
+
+def test_workflow_can_force_offline_mode():
+    graph = build_workflow(use_gemini=False)
+    result = graph.invoke(make_initial_state({
+        "sender": "security@example.com",
+        "subject": "Urgent security incident",
+        "body": "Please review immediately.",
+    }))
+    assert result["action"] == "flag_for_review"
+    assert result["urgency"] == "High"
+
+
 if __name__ == "__main__":
     test_decision_rules()
     test_validation()
+    test_workflow_can_force_offline_mode()
     print("All tests passed.")

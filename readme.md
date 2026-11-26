@@ -30,6 +30,8 @@ The learning progression is: embeddings → vector search → RAG → composed c
 
 ```text
 .
+├── app.py
+├── capstone_core.py
 ├── data/
 │   └── AI_Ethics_Policy.pdf
 ├── labs/
@@ -37,6 +39,8 @@ The learning progression is: embeddings → vector search → RAG → composed c
 │   ├── demo_2_rag_chatbot.py
 │   ├── demo_3_langchain_pipeline.py
 │   └── demo4.py
+├── tests/
+│   └── test_capstone_core.py
 ├── requirements.txt
 └── readme.md
 ```
@@ -47,14 +51,21 @@ The workspace currently includes these runnable labs:
 - **`labs/demo_2_rag_chatbot.py`** — extracts text from the sample PDF, chunks and embeds it, retrieves relevant passages, and asks Gemini to answer using that evidence.
 - **`labs/demo_3_langchain_pipeline.py`** — demonstrates a simple LCEL chain, a sequential research-and-summary pipeline, a multi-input lesson-plan chain, and batch glossary generation.
 - **`labs/demo4.py`** — uses `RunnableWithMessageHistory` and an in-memory `ChatMessageHistory` dictionary to keep two Gemini conversations separate by `session_id`. `MessagesPlaceholder` inserts prior turns into the prompt; `input_messages_key` identifies the current user input, and `history_messages_key` identifies the prompt variable for prior turns. It defines three `@tool`s and demonstrates the chatbot selecting and calling them, alongside direct `.invoke()` tests.
+- **`app.py`** — Streamlit capstone that brings the workshop ideas together:
+  - **Knowledge assistant:** indexes the supplied policy or an uploaded text-based PDF, retrieves semantic matches from ChromaDB, and grounds Gemini answers in those passages.
+  - **Learning studio:** creates lesson plans, runs a research → answers → summary LCEL pipeline, or batches glossary definitions.
+  - **Study chat:** keeps conversation history in the current Streamlit session and exposes validated date, word-count, and study-plan tools.
+  - **Email workflow:** uses LangGraph to classify, route, and optionally draft email replies for human review. It never sends or modifies email. Triage and local study tools work without a Gemini key.
+- **`capstone_core.py`** — shared text chunking, model-output parsing, and validated study-tool helpers.
 
-The mentor guide also covers LangGraph and email-agent examples, which are not currently included as scripts in `labs/`.
+The labs remain available as standalone examples; the capstone presents the main concepts in one interactive app.
 
 ## Requirements
 
 - Python 3.12 is the interpreter used for this workspace.
 - A Google Gemini API key is required for the RAG chatbot, LCEL pipeline, and conversation-history demo. The vector database demo uses a local embedding model; its first run downloads that model.
 - Internet access is needed to install packages, download the embedding model, and call Gemini.
+- The Streamlit capstone can run its deterministic email workflow and local study tools without a Gemini API key.
 
 ## Setup
 
@@ -96,6 +107,33 @@ GOOGLE_API_KEY=your_gemini_api_key
 ```
 
 Keep the key private. `.env` is ignored by Git; do not paste API keys into source files, commits, or AI chat prompts.
+
+## Run the Streamlit capstone
+
+From the repository root, install the requirements and start the app:
+
+```powershell
+python -m pip install -r requirements.txt
+python -m streamlit run app.py
+```
+
+The app reads `GOOGLE_API_KEY` from `.env` or Streamlit secrets. Without a key, email triage uses the deterministic workshop classifier, and local study tools remain available. The first PDF indexing run downloads the sentence-transformer embedding model; PDF indexes and chat history are held in memory for the active app session.
+
+## Deploy to Streamlit Community Cloud
+
+1. Push this repository to a GitHub repository that Streamlit Community Cloud can access.
+2. In [Streamlit Community Cloud](https://share.streamlit.io/), create an app from that repository and set the main file path to `app.py`.
+3. Use Python 3.12 for the deployed app.
+4. In the app's **Settings → Secrets**, add:
+
+   ```toml
+   GOOGLE_API_KEY = "your_gemini_api_key"
+   GEMINI_MODEL = "gemini-3.8-flash"
+   ```
+
+5. Deploy. Dependencies install from `requirements.txt`; the first PDF indexing run downloads the embedding model.
+
+Do not commit `.env` or Streamlit secrets. Uploaded documents and chat history are session-scoped and are not persisted between app restarts.
 
 ## Run the labs
 
